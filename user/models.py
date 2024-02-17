@@ -16,8 +16,8 @@ class UserManager(BaseUserManager):
 
     use_in_migrations = True
 
-    def create_user(self, user_email, user_code, password=None):
-        user = self.model(user_email=user_email, user_code=user_code.upper())
+    def create_user(self, user_email, password):
+        user = self.model(user_email=user_email)
         user.set_password(password)
 
         user.save(using=self._db)
@@ -25,9 +25,10 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, user_email, password):
-        user = self.create_user(user_email, "passwd", password)
+        user = self.create_user(user_email, password)
 
         # Set admin permissions
+        user.is_active = True
         user.is_admin = True
         user.is_superuser = True
         user.is_staff = True
@@ -52,10 +53,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     # Core user informations for authentication
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     user_email = models.EmailField(max_length=254, null=False, unique=True)
-    user_code = models.CharField("User Code", max_length=2, blank=True)
 
     # Basic permissions overwritten
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -76,7 +76,9 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     date_joined = models.DateTimeField(auto_now_add=True)
-    profile_image = models.ImageField(
+    user_fullname = models.CharField("User Fullname", max_length=16)
+    user_code = models.CharField("User Code", max_length=2)
+    user_image = models.ImageField(
         "Profile image",
         upload_to=uuid_filepath,
     )

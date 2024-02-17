@@ -37,7 +37,7 @@
 					<form
 						class="mt-4"
 						method="post"
-						action="{% url 'common:login' %}"
+						action="{% url 'user:login' %}"
 					>
 						{% csrf_token %} 
 						{% include "_form_errors.html" %}
@@ -45,12 +45,12 @@
 							<input
 								type="text"
 								class="form-control rounded-3"
-								id="floatingInputUsername"
-								placeholder="Enter Username"
-								name="username"
-								value="{{ form.username.value|default_if_none:'' }}"
+								id="floatingInputUserEmail"
+								placeholder="Enter User Email"
+								name="user_email"
+								value="{{ form.user_email.value|default_if_none:'' }}"
 							/>
-							<label for="floatingInputUsername">Username</label>
+							<label for="floatingInputUserEmail">User Email</label>
 						</div>
 
 						<div
@@ -115,7 +115,7 @@
 				<p class="mb-0 rounded-0">
 					Don't have an account?
 					<a
-						href="{% url 'common:signup' %}"
+						href="{% url 'user:signup' %}"
 						class="text-danger"
 						>Sign Up</a
 					>

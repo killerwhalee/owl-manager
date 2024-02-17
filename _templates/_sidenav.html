@@ -8,14 +8,14 @@
 		<div class="hstack gap-3">
 			<div class="">
 				<img
-					src="{{user.userprofile.image}}"
+					src="/media/{{user.profile.user_image}}"
 					width="45"
 					class="rounded-3 p-1 bg-white"
 					alt=""
 				/>
 			</div>
 			<div class="details">
-				<h6 class="mb-0 text-white">Hi, {{user.username}}!</h6>
+				<h6 class="mb-0 text-white">Hi, {{user.profile.user_fullname}}!</h6>
 			</div>
 		</div>
 		{% else %}
@@ -70,23 +70,14 @@
 				</li>
 				{% if user.is_authenticated %}
 				<li>
-					<form
-						method="post"
-						action="#"
-					>
-						{% csrf_token %}
-						<a
-							href="#"
-							onclick="this.parentNode.submit(); return false;"
-						>
-							<i class="bi bi-box-arrow-right me-2"></i>
-							Log Out
-						</a>
-					</form>
+					<a href="{% url 'user:logout' %}">
+						<i class="bi bi-box-arrow-right me-2"></i>
+						Log Out
+					</a>
 				</li>
 				{% else %}
 				<li>
-					<a href="#">
+					<a href="{% url 'user:login' %}">
 						<i class="bi bi-box-arrow-in-right me-2"></i>
 						Log In
 					</a>
