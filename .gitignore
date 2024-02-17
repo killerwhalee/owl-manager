@@ -4,7 +4,8 @@ __pycache__/
 *.pot
 
 # Confidential settings
-base-*.py
+*/settings/*
+!*/settings/base.py
 
 # Private folder
 _logs/
