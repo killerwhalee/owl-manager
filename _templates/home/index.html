@@ -1,0 +1,42 @@
+{% extends "_base.html" %} {% block contents %}
+<!--start banner slider-->
+<h4 class="my-2 text-center fw-bold section-title">Introduction</h4>
+<div class="banner-slider">
+	<div class="banner-item">
+		<a href="shop.html">
+			<img
+				src="https://via.placeholder.com/1200X675"
+				class="img-fluid rounded-3"
+				alt=""
+			/>
+		</a>
+	</div>
+</div>
+<!--end banner slider-->
+
+<div class="py-2"></div>
+
+<!--start reviews section-->
+<div class="reviews-section">
+	<h4 class="my-2 text-center fw-bold section-title">Testimonial</h4>
+	<div class="review-slider">
+		{% for i in "123456"|make_list %}
+		<div class="review-item p-3 border rounded-3 bg-light">
+			<h6 class="client-name fw-bold">Michael Clarke</h6>
+			<div class="ratings mb-2">
+				<i class="bi bi-star-fill text-warning"></i>
+				<i class="bi bi-star-fill text-warning"></i>
+				<i class="bi bi-star-fill text-warning"></i>
+				<i class="bi bi-star-fill text-warning"></i>
+				<i class="bi bi-star-fill text-warning"></i>
+			</div>
+			<div class="review-text">
+				{% lorem 20 w random %}
+				<p class="text-end mb-0 reviw-date">10/06/2022 at 14:20:18</p>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+<!--end reviews section-->
+{% endblock contents %}

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		{% include "_head.html" %}
+	</head>
+
+	<body>
+		<!--page loader-->
+		<div class="loader-wrapper">{% include "_loader.html" %}</div>
+		<!--end loader-->
+
+		<!--start wrapper-->
+		<div class="wrapper">
+			<!--start to header-->
+			<header
+				class="top-header fixed-top border-bottom d-flex align-items-center"
+			>
+				<nav class="navbar navbar-expand w-100 p-0 gap-3 align-items-center">
+					<div
+						class="nav-button"
+						onclick="history.back()"
+					>
+						<a href="javascript:;"><i class="bi bi-arrow-left"></i></a>
+					</div>
+					<div class="account-sign-up">
+						<h6 class="mb-0 fw-bold text-dark">Sign Up</h6>
+					</div>
+				</nav>
+			</header>
+			<!--end to header-->
+
+			<!--start to page content-->
+			<div class="page-content">
+				<div class="login-body">
+					<h5 class="fw-bold">Getting Started</h5>
+					<p class="mb-0">Be the proud member of Healing Mentor!</p>
+					<form
+						class="mt-4"
+						method="post"
+						action="{% url 'common:signup' %}"
+					>
+						{% csrf_token %} {% include "_form_errors.html" %}
+						<div class="form-floating mb-3">
+							<input
+								type="text"
+								class="form-control rounded-3"
+								id="floatingInputUsername"
+								name="username"
+								placeholder="Enter Username"
+							/>
+							<label for="floatingInputName">Username</label>
+						</div>
+
+						<div class="form-floating mb-3">
+							<input
+								type="email"
+								class="form-control rounded-3"
+								id="floatingInputEmail"
+								name="email"
+								placeholder="name@example.com"
+							/>
+							<label for="floatingInputEmail">Email</label>
+						</div>
+
+						<div
+							class="input-group mb-3"
+							id="show_hide_password"
+						>
+							<div class="form-floating flex-grow-1">
+								<input
+									type="password"
+									class="form-control rounded-3 border-end-0 rounded-end-0"
+									id="floatingInputPassword"
+									name="password1"
+									placeholder="Enter Password"
+								/>
+								<label for="floatingInputPassword">Password</label>
+							</div>
+							<span
+								class="input-group-text bg-transparent rounded-3 rounded-start-0"
+								><i class="bi bi-eye-slash"></i
+							></span>
+						</div>
+
+						<div
+							class="input-group mb-3"
+							id="show_hide_password"
+						>
+							<div class="form-floating flex-grow-1">
+								<input
+									type="password"
+									class="form-control rounded-3 border-end-0 rounded-end-0"
+									id="floatingInputConfirmPassword"
+									name="password2"
+									placeholder="Enter Password"
+								/>
+								<label for="floatingInputConfirmPassword"
+									>Confirm Password</label
+								>
+							</div>
+							<span
+								class="input-group-text bg-transparent rounded-3 rounded-start-0"
+								><i class="bi bi-eye-slash"></i
+							></span>
+						</div>
+
+						<!-- <div class="mb-3">
+							<div class="form-check">
+								<input
+									class="form-check-input"
+									type="checkbox"
+									value=""
+									id="flexCheckDefault"
+								/>
+								<label
+									class="form-check-label"
+									for="flexCheckDefault"
+								>
+									I agree to Terms and Conditions
+								</label>
+							</div>
+						</div> -->
+
+						<div class="mb-0 d-grid">
+							<button
+								type="submit"
+								class="btn btn-dark btn-ecomm rounded-3"
+							>
+								Register
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<!--end to page content-->
+
+			<!--start to footer-->
+			<footer
+				class="page-footer fixed-bottom border-top d-flex align-items-center justify-content-center"
+			>
+				<p class="mb-0 rounded-0">
+					Already have an account?
+					<a
+						href="{% url 'common:login' %}"
+						class="text-danger"
+						>Log In</a
+					>
+				</p>
+			</footer>
+			<!--end to footer-->
+		</div>
+		<!--end wrapper-->
+
+		<!--JS Files-->
+		{% include "_scripts.html" %}
+	</body>
+</html>

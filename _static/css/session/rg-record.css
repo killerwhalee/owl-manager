@@ -1,0 +1,9 @@
+.vertical-slider {
+	width: 250px; /* Set the width of the vertical slider */
+	height: 250px; /* Set the height of the vertical slider */
+	transform: rotate(270deg); /* Rotate the slider vertically */
+}
+
+.vertical-slider::-webkit-slider-thumb {
+	transform: rotate(90deg); /* Rotate the slider thumb back to normal */
+}

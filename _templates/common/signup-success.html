@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		{% include "_head.html" %}
+	</head>
+
+	<body>
+		<!--page loader-->
+		<div class="loader-wrapper">{% include "_loader.html" %}</div>
+		<!--end loader-->
+
+		<!--start wrapper-->
+		<div class="wrapper">
+			<!--start to header-->
+			<header
+				class="top-header fixed-top border-bottom d-flex align-items-center"
+			>
+				<nav class="navbar navbar-expand w-100 p-0 gap-3 align-items-center">
+					<div
+						class="nav-button"
+						onclick="history.back()"
+					>
+						<a href="javascript:;"><i class="bi bi-arrow-left"></i></a>
+					</div>
+					<div class="account-verification">
+						<h6 class="mb-0 fw-bold text-dark">Sign Up</h6>
+					</div>
+				</nav>
+			</header>
+			<!--end to header-->
+
+			<!--start to page content-->
+			<div class="page-content">
+				<div class="login-body">
+					<h5 class="fw-bold">Resigstration Completed!</h5>
+					<p class="mb-0">Now you can use full service of Healing Mentor!</p>
+					<div class="mb-0 d-grid">
+						<a
+							href="/"
+							class="btn btn-dark btn-ecomm rounded-3"
+							>Go Back to Home</a
+						>
+					</div>
+				</div>
+			</div>
+			<!--end to page content-->
+		</div>
+		<!--end wrapper-->
+
+		<!--JS Files-->
+		{% include "_scripts.html" %}
+	</body>
+</html>
