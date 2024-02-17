@@ -143,7 +143,7 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
 
 # User Media
