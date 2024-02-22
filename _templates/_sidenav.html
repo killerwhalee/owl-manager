@@ -15,7 +15,7 @@
 				/>
 			</div>
 			<div class="details">
-				<h6 class="mb-0 text-white">Hi, {{user.profile.user_fullname}}!</h6>
+				<h6 class="mb-0 text-white">안녕하세요, {{user.profile.user_fullname}}님!</h6>
 			</div>
 		</div>
 		{% else %}
@@ -29,7 +29,7 @@
 				/>
 			</div>
 			<div class="details">
-				<h6 class="mb-0 text-white">Login First</h6>
+				<h6 class="mb-0 text-white">로그인하세요</h6>
 			</div>
 		</div>
 		{% endif %}
@@ -46,7 +46,7 @@
 				<li>
 					<a href="/">
 						<i class="bi bi-house-door me-2"></i>
-						Home
+						홈
 					</a>
 				</li>
 				<li>
@@ -55,31 +55,31 @@
 						href="javascript:;"
 					>
 						<i class="bi bi-person me-2"></i>
-						Account
+						계정
 					</a>
 					<ul>
-						<li><a href="javascript:;">View My Profile</a></li>
-						<li><a href="javascript:;">Account Settings</a></li>
+						<li><a href="javascript:;">내 프로필</a></li>
+						<li><a href="javascript:;">계정 설정</a></li>
 					</ul>
 				</li>
 				<li>
 					<a href="javascript:;">
 						<i class="bi bi-question-circle me-2"></i>
-						About Us
+						Towel 소개
 					</a>
 				</li>
 				{% if user.is_authenticated %}
 				<li>
 					<a href="{% url 'user:logout' %}">
 						<i class="bi bi-box-arrow-right me-2"></i>
-						Log Out
+						로그아웃
 					</a>
 				</li>
 				{% else %}
 				<li>
 					<a href="{% url 'user:login' %}">
 						<i class="bi bi-box-arrow-in-right me-2"></i>
-						Log In
+						로그인
 					</a>
 				</li>
 				{% endif %}
@@ -98,7 +98,7 @@
 			<label
 				class="form-check-label"
 				for="DarkMode"
-				>Dark Mode</label
+				>다크 모드!</label
 			>
 		</div>
 	</div>
