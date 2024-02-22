@@ -1,0 +1,95 @@
+{% extends "_base.html" %} {% block contents %}
+<div class="card rounded-3 mb-3">
+	<div class="card-body">
+		<form
+			id="evaluate-form"
+			method="POST"
+		>
+			{% csrf_token %}
+			{% include "_form_errors.html" %}
+			<div class="form-body">
+				<h5 class="mb-0 fw-bold">본부 심사 신청</h5>
+				<div class="my-3 border-bottom"></div>
+				<div class="mb-3">
+					<label class="form-label">모의고사의 이름</label>
+					<input
+						type="text"
+						class="form-control rounded-3"
+						name="name"
+						value="{{ form.name.value|default_if_none:'' }}"
+					/>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">모의고사의 컨셉</label>
+					<textarea
+						class="form-control rounded-3"
+						name="concept"
+						rows="4"
+						cols="4"
+						value="{{ form.concept.value|default_if_none:'' }}"
+					></textarea>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">모의고사의 좋은 점</label>
+					<textarea
+						class="form-control rounded-3"
+						name="pros"
+						rows="4"
+						cols="4"
+						value="{{ form.pros.value|default_if_none:'' }}"
+					></textarea>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">모의고사의 나쁜 점</label>
+					<textarea
+						class="form-control rounded-3"
+						name="cons"
+						rows="4"
+						cols="4"
+						value="{{ form.cons.value|default_if_none:'' }}"
+					></textarea>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">예상 공격</label>
+					<textarea
+						class="form-control rounded-3"
+						name="attack"
+						rows="4"
+						cols="4"
+						value="{{ form.attack.value|default_if_none:'' }}"
+					></textarea>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">예상 공격에 대한 방어</label>
+					<textarea
+						class="form-control rounded-3"
+						name="defense"
+						rows="4"
+						cols="4"
+						value="{{ form.defense.value|default_if_none:'' }}"
+					></textarea>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="card rounded-3">
+	<div class="card-body">
+		<div class="mb-3">
+			<h5 class="mb-3 fw-bold">안내 사항</h5>
+			<p class="mb-0 font-14">
+				승인/반려 여부는 48시간 아내에 기안자에게 <br />카카오톡으로 발송됩니다.
+			</p>
+		</div>
+		<hr />
+		<button
+			type="submit"
+			class="btn btn-sm btn-success"
+			form="evaluate-form"
+		>
+			제출하기
+		</button>
+	</div>
+</div>
+{% endblock contents %}

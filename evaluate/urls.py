@@ -5,5 +5,5 @@ from evaluate import views
 app_name = "evaluate"
 
 urlpatterns = [
-    path("", lambda _: _, name="index"),
+    path("", views.eval_request, name="request"),
 ]

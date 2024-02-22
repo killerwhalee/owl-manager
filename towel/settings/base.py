@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "user.apps.UserConfig",
     # Applications
     "home.apps.HomeConfig",
+    "evaluate.apps.EvaluateConfig",
 ]
 
 MIDDLEWARE = [
@@ -130,7 +131,7 @@ LOGOUT_REDIRECT_URL = "/"
 
 # Internationalization
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ko-kr"
 
 TIME_ZONE = "Asia/Seoul"
 
