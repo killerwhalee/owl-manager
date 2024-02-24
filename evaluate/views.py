@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 from evaluate.forms import EvaluationForm
 
 
+@login_required("user:login")
 def eval_request(request):
     context = {}
 
