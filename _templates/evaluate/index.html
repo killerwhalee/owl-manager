@@ -1,0 +1,142 @@
+{% extends "_base.html" %} {% block contents %}
+<h2 class="mb-3 fw-bold">신청 목록</h2>
+<div class="row row-cols-1 g-3">
+	{% for evaluate in evaluate_list %}
+	<div class="col">
+		<div class="card rounded-3">
+			<div class="card-body">
+				<div
+					class="d-flex flex-row align-items-center justify-content-between gap-1"
+				>
+					<div>
+						<div class="card-title">
+							<h5 class="fw-bold">{{evaluate.name}}</h5>
+						</div>
+						<div class="card-subtitle mb-2 text-body-secondary">
+							작성자: {{evaluate.user.profile.user_fullname}}
+							({{evaluate.user.profile.user_code}})
+						</div>
+						{% if evaluate.is_checked %} {% if evaluate.is_approved %}
+						<p class="card-text fw-bold text-success">승인</p>
+						{% else %}
+						<p class="card-text fw-bold text-danger">반려</p>
+						{% endif %} {% else %}
+						<p class="card-text fw-bold">대기 중</p>
+						{% endif %}
+
+						<div>
+							<button
+								type="button"
+								class="btn btn-primary btn-sm"
+								data-bs-toggle="modal"
+								data-bs-target="#modal-{{forloop.counter}}"
+							>
+								세부 사항
+							</button>
+							{% if evaluate.user == user %}
+							<a
+								role="button"
+								href="javas
+								cript:;"
+								class="btn btn-danger btn-sm"
+							>
+								신청 취소
+							</a>
+							{% endif %}
+						</div>
+					</div>
+					<div
+						class="mx-5"
+						style="font-size: xx-large"
+					></div>
+					<input
+						type="text"
+						id="csvInput-x-{{forloop.counter}}"
+						name="csv_input"
+						value="{{csv_x_data}}"
+						style="display: none"
+					/>
+					<input
+						type="text"
+						id="csvInput-y-{{forloop.counter}}"
+						name="csv_input"
+						value="{{csv_y_data}}"
+						style="display: none"
+					/>
+				</div>
+			</div>
+			<!-- Modal -->
+			<div
+				class="modal fade"
+				id="modal-{{forloop.counter}}"
+				data-bs-backdrop="static"
+				data-bs-keyboard="false"
+				tabindex="-1"
+				aria-labelledby="staticBackdropLabel"
+				aria-hidden="true"
+			>
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h1
+								class="modal-title fw-bold fs-5"
+								id="staticBackdropLabel"
+							>
+								{{evaluate.name}}
+							</h1>
+							<button
+								type="button"
+								class="btn-close"
+								data-bs-dismiss="modal"
+								aria-label="Close"
+							></button>
+						</div>
+						<div class="modal-body">
+							<p>
+								작성자: {{evaluate.user.profile.user_fullname}}
+								({{evaluate.user.profile.user_code}})
+							</p>
+							<p>작성일: {{evaluate.date_created}}</p>
+							<hr />
+							<h5 class="fw-bold mt-2">모의고사의 컨셉</h5>
+							<p>{{evaluate.concept}}</p>
+							<h5 class="fw-bold mt-2">모의고사의 좋은 점</h5>
+							<p>{{evaluate.pros}}</p>
+							<h5 class="fw-bold mt-2">모의고사의 나쁜 점</h5>
+							<p>{{evaluate.cons}}</p>
+							<h5 class="fw-bold mt-2">예상 공격</h5>
+							<p>{{evaluate.attack}}</p>
+							<h5 class="fw-bold mt-2">공격에 대한 방어</h5>
+							<p>{{evaluate.defense}}</p>
+						</div>
+						<div class="modal-footer">
+							{% if user.is_staff %}
+							<a class="btn btn-primary btn-sm"> 승인 </a>
+							<a class="btn btn-danger btn-sm"> 반려 </a>
+							{% endif %}
+							<button
+								type="button"
+								class="btn btn-secondary btn-sm"
+								data-bs-toggle="modal"
+							>
+								닫기
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+<div class="d-grid gap-2">
+	<a
+		href="{% url 'evaluate:request' %}"
+		class="btn btn-primary btn-sm mt-2"
+	>
+		신규 신청
+	</a>
+</div>
+{% endblock contents %} {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}

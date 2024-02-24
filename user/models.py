@@ -80,6 +80,7 @@ class Profile(models.Model):
     user_code = models.CharField("User Code", max_length=2)
     user_image = models.ImageField(
         "Profile image",
+        null=True,
         upload_to=uuid_filepath,
     )
 
