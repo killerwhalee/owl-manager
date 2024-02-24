@@ -10,11 +10,11 @@ case "$1" in
     "rebuild")
         sh database flush $2
         sh database refresh $2
-        python manage.py createsuperuser --settings=towel.settings.$2
+        python manage.py createsuperuser --settings=common.settings.$2
         ;;
     "refresh")
-        python manage.py makemigrations --settings=towel.settings.$2
-        python manage.py migrate --settings=towel.settings.$2
+        python manage.py makemigrations --settings=common.settings.$2
+        python manage.py migrate --settings=common.settings.$2
         ;;
     *)
         echo "Unknown parameter: $1"
