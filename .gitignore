@@ -10,6 +10,7 @@ __pycache__/
 # Private folder
 _logs/
 _media/
+_static/admin/
 
 # Environment value
 .venv/
