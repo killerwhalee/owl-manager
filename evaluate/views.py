@@ -17,17 +17,28 @@ def eval_request(request):
             evaluate.user = request.user
             evaluate.save()
 
-            return redirect("evaluate:request")
+            return redirect("evaluate:index")
 
         context["form"] = eval_form
 
     return render(request, "evaluate/request.html", context=context)
 
+
+@login_required(login_url="user:login")
+def eval_delete(request, eval_id):
+    evaluate = Evaluation.objects.get(id=eval_id)
+
+    if request.user == evaluate.user:
+        evaluate.delete()
+
+        return redirect("evaluate:index")
+
+    return redirect("evaluate:index")
+
+
 @login_required(login_url="user:login")
 def eval_index(request):
     evaluate_list = Evaluation.objects.filter(user=request.user)
-    
-    context = {
-        "evaluate_list": evaluate_list
-    }
+
+    context = {"evaluate_list": evaluate_list}
     return render(request, "evaluate/index.html", context=context)
