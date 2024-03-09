@@ -15,4 +15,5 @@ urlpatterns = [
     path("user/", include("user.urls")),
     # User Purpose Application
     path("evaluate/", include("evaluate.urls")),
+    path("tools/", include("tools.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -15,7 +15,7 @@ def main():
             "forget to activate a virtual environment?"
         ) from exc
     
-    sys.path.append('/home/ubuntu/ccs-kaist/')
+    sys.path.append('/home/ubuntu/owl-manager/')
     execute_from_command_line(sys.argv)
 
 

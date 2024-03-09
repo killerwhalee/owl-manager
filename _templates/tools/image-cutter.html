@@ -1,0 +1,53 @@
+{% extends "_base.html" %} {% block contents %}
+<h2 class="mb-3 fw-bold">Image Cutter</h2>
+<div class="row row-cols-1 g-3">
+	<div class="col">
+		<div class="card rounded-3">
+			<div class="card-body">
+				<div class="card-title">
+					<h5 class="fw-bold">Image Cutter</h5>
+				</div>
+
+				<div class="card-subtitle mb-2 text-body-secondary">
+					모의고사 이미지 추출기입니다
+				</div>
+
+				<div>
+					<form
+						id="image-cutter-form"
+						method="POST"
+					>
+						{% csrf_token %}
+						<select
+							class="form-select mb-2"
+							name="file_type"
+						>
+							<option selected>모의고사 형식을 선택하세요</option>
+							<option>타입 A1: 최신 평가원 형식</option>
+							<option>타입 A2: 2015-2017 평가원 형식</option>
+							<option>타입 B1: 2014 이전 평가원 형식</option>
+						</select>
+						<input
+							type="file"
+							class="mb-2"
+							name="file_source"
+							accept=".pdf"
+						/>
+					</form>
+					<div class="d-grid">
+						<button
+							type="submit"
+							class="btn btn-primary btn-sm"
+							form="image-cutter-form"
+						>
+							실행
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock contents %} {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}

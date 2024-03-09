@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     # Applications
     "home.apps.HomeConfig",
     "evaluate.apps.EvaluateConfig",
+    "tools.apps.ToolsConfig",
 ]
 
 MIDDLEWARE = [
