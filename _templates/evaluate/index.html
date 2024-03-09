@@ -34,14 +34,14 @@
 								세부 사항
 							</button>
 							{% if evaluate.user == user %}
-							<a
-								role="button"
-								href="javas
-								cript:;"
+							<button
+								type="button"
 								class="btn btn-danger btn-sm"
+								data-bs-toggle="modal"
+								data-bs-target="#modal-{{forloop.counter}}-delete"
 							>
 								신청 취소
-							</a>
+							</button>
 							{% endif %}
 						</div>
 					</div>
@@ -65,6 +65,7 @@
 					/>
 				</div>
 			</div>
+
 			<!-- Modal -->
 			<div
 				class="modal fade"
@@ -114,6 +115,55 @@
 							<a class="btn btn-primary btn-sm"> 승인 </a>
 							<a class="btn btn-danger btn-sm"> 반려 </a>
 							{% endif %}
+							<button
+								type="button"
+								class="btn btn-secondary btn-sm"
+								data-bs-toggle="modal"
+							>
+								닫기
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Modal Delete -->
+			<div
+				class="modal fade"
+				id="modal-{{forloop.counter}}-delete"
+				data-bs-backdrop="static"
+				data-bs-keyboard="false"
+				tabindex="-1"
+				aria-labelledby="staticBackdropLabel"
+				aria-hidden="true"
+			>
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h1
+								class="modal-title fw-bold fs-5"
+								id="staticBackdropLabel"
+							>
+								정말로 취소하시겠습니까?
+							</h1>
+							<button
+								type="button"
+								class="btn-close"
+								data-bs-dismiss="modal"
+								aria-label="Close"
+							></button>
+						</div>
+						<div class="modal-body">
+							<p>신청 내용이 삭제되며, 해당 작업은 되돌릴 수 없습니다.</p>
+						</div>
+						<div class="modal-footer">
+							<a
+								role="button"
+								href="{% url 'evaluate:delete' evaluate.id %}"
+								class="btn btn-danger btn-sm"
+							>
+								신청 취소
+							</a>
 							<button
 								type="button"
 								class="btn btn-secondary btn-sm"
