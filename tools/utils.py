@@ -1,239 +1,94 @@
-from tools.models import ImageCutterOption
-
-from pdf2image import convert_from_path as pdf
+from pdf2image import convert_from_path
 from PIL import Image
-
 import os
 
 
-def run(file_source, file_type):
-    success, fail = (0, 0)
-
-    # Load cropMode from cropData JSON file
-    image_cutter_option = ImageCutterOption.objects.get(file_type=file_type)
-    crop_data = image_cutter_option.data
-
-    leftFirstImageCropPercentage = crop_data[file_type]["leftFirstImageCropPercentage"]
-    rightFirstImageCropPercentage = crop_data[file_type][
-        "rightFirstImageCropPercentage"
-    ]
-
-    leftImageCropPercentage = crop_data[file_type]["leftImageCropPercentage"]
-    rightImageCropPercentage = crop_data[file_type]["rightImageCropPercentage"]
-
-    cropCheckRange = crop_data[file_type]["cropCheckRange"]
-
-    # Catch error/exception occur while running function
-    try:
-        pageNum = 1
-        startNum = 1
-        pdfFile = pdf(file_source, dpi=600)
-        fileName, fileExt = os.path.splitext(file_source)
-
-        for pdfImage in pdfFile:
-            pdfImage.save(f"{fileName}-PAGE#{pageNum}-L.png")
-            pdfImage.save(f"{fileName}-PAGE#{pageNum}-R.png")
-            # pageNum += 1; continue # For raw extraction
-
-            # Typically first page has different form (case specific).
-            # If not, FirstImageCropPercentage would be same with
-            # ImageCropPercentage in JSON file
-            if pageNum % 4 == 1 and (
-                leftFirstImageCropPercentage or rightFirstImageCropPercentage
-            ):
-                leftCropRange = leftFirstImageCropPercentage
-                rightCropRange = rightFirstImageCropPercentage
-            else:
-                leftCropRange = leftImageCropPercentage
-                rightCropRange = rightImageCropPercentage
-
-            # This is for Binary Cropping
-            if leftCropRange:
-                startNum += imgBinaryCrop(
-                    f"{fileName}-PAGE#{pageNum}-L.png",
-                    dest=fileName,
-                    cropRange=leftCropRange,
-                    cropCheckRange=cropCheckRange,
-                    startNum=startNum,
-                    numDigit=2,
-                )
-
-            if rightCropRange:
-                startNum += imgBinaryCrop(
-                    f"{fileName}-PAGE#{pageNum}-R.png",
-                    dest=fileName,
-                    cropRange=rightCropRange,
-                    cropCheckRange=cropCheckRange,
-                    startNum=startNum,
-                    numDigit=2,
-                )
-
-            # This is for Raw Cropping
-            # startNum += imgRawCrop(
-            #     f"{fileName}-PAGE#{pageNum}-L.png",
-            #     dest=f"{fileName}-halfcrop",
-            #     cropRange=leftCropRange,
-            #     startNum=startNum,
-            #     numDigit=2,
-            # )
-            # startNum += imgRawCrop(
-            #     f"{fileName}-PAGE#{pageNum}-R.png",
-            #     dest=f"{fileName}-halfcrop",
-            #     cropRange=rightCropRange,
-            #     startNum=startNum,
-            #     numDigit=2,
-            # )
-
-            # Remove temporal file created
-            os.remove(f"{fileName}-PAGE#{pageNum}-L.png")
-            os.remove(f"{fileName}-PAGE#{pageNum}-R.png")
-
-            pageNum += 1
-
-    # We caught some error/exception here.
-    # Print error message and exit
-    except Exception as e:
-        print(f"Error in source [{file_source}] - {e}")
-        return False
-
-    return True
-
-
-def imgBottomTrim(image, whiteSpace):
-    # Image Bottom Trimming
-    bottomLine = 0
-    width, height = image.size
-
-    for heightPixel in range(height):
-        for widthPixel in range(int(width * 0.5)):
-            if image.getpixel((widthPixel, heightPixel)) != (255, 255, 255):
-                bottomLine = heightPixel
-                break
-
-    recroppedRegion = 0, 0, width, min(bottomLine + 2 * whiteSpace, height)
-    image = image.crop(recroppedRegion)
-    return image
-
-
-def imgRawCrop(src, dest=None, cropRange=(0, 0, 1, 1), startNum=1, numDigit=0):
-    if not dest:
-        dest = os.path.splitext(src)[0]
-    else:
-        dest = os.path.splitext(dest)[0]
-
-    image = Image.open(src)
-    width, height = image.size
-    imageCount = 0
-
-    ## Crop Image
-    imageCropArea = (
-        int(cropRange[0] * width),
-        int(cropRange[1] * height),
-        int(cropRange[2] * width),
-        int(cropRange[3] * height),
-    )
-    croppedImage = image.crop(imageCropArea)
-
-    imageStr = str(startNum + imageCount)
-    if numDigit:
-        imageStr = "0" * (numDigit - len(str(startNum + imageCount))) + str(
-            startNum + imageCount
-        )
-
-    croppedImage.save(f"{dest}_{imageStr}.png")
-
-    return 1
-
-
-def imgBinaryCrop(
-    src,
-    dest=None,
-    cropRange=(0, 0, 1, 1),
-    cropCheckRange=(0, 0),
-    startNum=1,
-    numDigit=0,
+def segmentalize(
+    image: Image.Image,
+    check_range: tuple[float, float] = (0, 1),
 ):
-
-    if not dest:
-        dest = os.path.splitext(src)[0]
-    else:
-        dest = os.path.splitext(dest)[0]
-
-    image = Image.open(src)
+    # Get variables
     width, height = image.size
+    check_next, check_empty = map(lambda _: int(_ * width), check_range)
+    white_space = int(height * 0.005)
 
-    ## Crop Image
-    imageCropArea = (
-        int(cropRange[0] * width),
-        int(cropRange[1] * height),
-        int(cropRange[2] * width),
-        int(cropRange[3] * height),
-    )
-    croppedImage = image.crop(imageCropArea)
-    width, height = croppedImage.size
-    whiteSpace = int(height * 0.005)
+    # Cursor for segmentalizing
+    cursor_top, cursor_bot = 0, 0
 
-    ## Variable Set
-    imageCount = 0
-    boundRange = [0, 0]
+    # Iterate each row in image
+    for pixel_y in range(height):
+        # Iterate each pixel in a row
+        for pixel_x in range(check_empty):
+            # Get pixel value for certain position
+            pixel_value = image.getpixel((pixel_x, pixel_y))
 
-    # Cut Each Paragraph in Cropped Page
-    for heightPixel in range(height):
-        for widthPixel in range(int(width * cropCheckRange[1])):
-            if croppedImage.getpixel((widthPixel, heightPixel)) != (255, 255, 255):
-                if widthPixel < width * cropCheckRange[0]:
-                    if boundRange[1]:
-                        recroppedRegion = (
-                            0,
-                            max(boundRange[0] - whiteSpace, 0),
-                            width,
-                            heightPixel - whiteSpace,
-                        )
-                        croppedHeight = (heightPixel - 1) - max(
-                            boundRange[0] - whiteSpace, 0
-                        )
+            # Check if checked position is on character pixel
+            if pixel_value != (255, 255, 255):
+                # If current row is the start of next segment,
+                # split current segment and save it.
+                if pixel_x < check_next and cursor_top < cursor_bot:
+                    # Set crop area
+                    crop_area = (
+                        0,
+                        max(cursor_top - white_space, 0),
+                        width,
+                        cursor_bot + white_space,
+                    )
 
-                        if boundRange[0]:
-                            imageStr = str(startNum + imageCount)
-                            if numDigit:
-                                imageStr = "0" * (
-                                    numDigit - len(str(startNum + imageCount))
-                                ) + str(startNum + imageCount)
+                    yield image.crop(crop_area)
 
-                            unTrimmedImage = croppedImage.crop(recroppedRegion)
-                            outputImage = imgBottomTrim(unTrimmedImage, whiteSpace)
-                            outputImage.save(f"{dest}_{imageStr}.png")
-
-                            imageCount += 1
-
-                        boundRange = [0, 0]
-
-                    if not boundRange[0]:
-                        boundRange[0] = heightPixel
+                    # And update top, reset bottom
+                    cursor_top, cursor_bot = pixel_y, 0
 
                 else:
-                    boundRange[1] = heightPixel
+                    cursor_bot = pixel_y
 
                 break
 
-    recroppedRegion = (
+    crop_area = (
         0,
-        max(boundRange[0] - whiteSpace, 0),
+        max(cursor_top - white_space, 0),
         width,
-        heightPixel - whiteSpace,
+        cursor_bot + white_space,
     )
-    croppedHeight = (heightPixel - 1) - max(boundRange[0] - whiteSpace, 0)
 
-    if boundRange[0]:
-        imageStr = str(startNum + imageCount)
-        imageStr = "0" * (numDigit - len(str(startNum + imageCount))) + str(
-            startNum + imageCount
-        )
+    yield image.crop(crop_area)
 
-        unTrimmedImage = croppedImage.crop(recroppedRegion)
-        outputImage = imgBottomTrim(unTrimmedImage, whiteSpace)
-        outputImage.save(f"{dest}_{imageStr}.png")
 
-        imageCount += 1
+def run(file_path: str, crop_option: dict):
+    # Catch error or exception while running function
+    try:
+        segment_num = 1
 
-    return imageCount
+        image_list = convert_from_path(file_path, dpi=600)
+        file_name, _ = os.path.splitext(file_path)
+
+        for page_index, image in enumerate(image_list):
+            # TODO: Crop page image regarding crop option
+            #
+            # Check whether current page is first or not
+            if page_index == 0:
+                crop_left = crop_option.get()
+                crop_right = crop_option.get()
+            else:
+                crop_left = crop_option.get()
+                crop_right = crop_option.get()
+
+            # Segmentalize left side of page
+            for image in segmentalize(image.crop(), check_range=(0, 1)):
+                image.save(f"{file_name}_{segment_num:2d}.png")
+                segment_num += 1
+
+            # Segmentalize right side of page
+            for image in segmentalize(image.crop(), check_range=(0, 1)):
+                image.save(f"{file_name}_{segment_num:2d}.png")
+                segment_num += 1
+
+    # If Exception is caught,
+    # print error message and return False(fail)
+    except Exception as e:
+        print(e)
+        return False
+
+    # Return True(success) if all done
+    return True
