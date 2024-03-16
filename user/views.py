@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from user.forms import LoginForm, RegisterForm
@@ -57,40 +58,14 @@ def user_signup(request):
     context = {"form": form}
     return render(request, "user/signup.html", context)
 
+
 def user_signup_success(request):
     return render(request, "user/signup-success.html")
 
 
-def terms(request):
-    return render(request, "user/terms.html")
-
-
-def user_profile(request, username):
-    user = User.objects.get(username=username)
+@login_required(login_url="user:login")
+def user_profile(request):
+    user = User.objects.get(id=request.user.id)
     context = {"user": user}
+
     return render(request, "user/profile.html", context)
-
-
-# Views for Error Handling
-def error400(request, exception):
-    return render(request, "error/400.html", {})
-
-
-def error403(request, exception):
-    return render(request, "error/403.html", {})
-
-
-def error404(request, exception):
-    return render(request, "error/404.html", {})
-
-
-def error500(request):
-    return render(request, "error/500.html", {})
-
-
-def error502(request):
-    return render(request, "error/502.html", {})
-
-
-def error503(request):
-    return render(request, "error/503.html", {})
