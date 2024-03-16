@@ -38,7 +38,11 @@ def eval_delete(request, eval_id):
 
 @login_required(login_url="user:login")
 def eval_index(request):
-    evaluate_list = Evaluation.objects.filter(user=request.user)
+    # Check if user is staff. If so, fetch all data.
+    if request.user.is_staff:
+        evaluate_list = Evaluation.objects.all()
+    else:
+        evaluate_list = Evaluation.objects.filter(user=request.user)
 
     context = {"evaluate_list": evaluate_list}
     return render(request, "evaluate/index.html", context=context)
