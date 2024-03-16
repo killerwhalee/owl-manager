@@ -72,7 +72,7 @@ class Profile(models.Model):
 
     """
 
-    from common.utils import uuid_filepath
+    from core.utils import uuid_filepath
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     date_joined = models.DateTimeField(auto_now_add=True)
