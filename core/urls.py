@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, re_path, include
 from django.shortcuts import redirect
 from django.conf import settings
 from django.conf.urls.static import static
@@ -10,10 +10,11 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # Home Redirection
     path("", lambda _: redirect("home/")),
-    # General Purpose Application
-    path("home/", include("home.urls")),
-    path("user/", include("user.urls")),
-    # User Purpose Application
-    path("evaluate/", include("evaluate.urls")),
-    path("tools/", include("tools.urls")),
+    # API Endpoints
+    re_path(r"^v1/", include("core.endpoints")),
+    # Application Routing
+    re_path(r"^home/", include("home.urls")),
+    re_path(r"^user/", include("user.urls")),
+    re_path(r"^evaluate/", include("evaluate.urls")),
+    re_path(r"^tools/", include("tools.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
