@@ -23,9 +23,9 @@
 							name="file_type"
 						>
 							<option selected>모의고사 형식을 선택하세요</option>
-							<option>타입 A1: 최신 평가원 형식</option>
-							<option>타입 A2: 2015-2017 평가원 형식</option>
-							<option>타입 B1: 2014 이전 평가원 형식</option>
+							{% for option in option_list %}
+							<option>{{option.name}}</option>
+							{% endfor %}
 						</select>
 						<input
 							type="file"
